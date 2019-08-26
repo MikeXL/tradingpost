@@ -1,0 +1,12 @@
+Package: Trading Post 
+Title: Fun with algo tradinng
+Version: 0.1.4
+Date: 2019-08-25
+Author: ML @TigerPlusDragon
+Maintainer: Mike <mike@mscanada.net>
+Description: Nothing more if you dont trade
+License: MIT
+URL: http://mike.mscanada.net
+BugReports: http://github.com/MikeXL/tradingpost
+NeedsCompilation: no
+Packaged: 2019-08-25 20:22:43 PDT; Mike
