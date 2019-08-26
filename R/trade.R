@@ -1,7 +1,7 @@
 library(quantmod)
 library(PerformanceAnalytics)
 
-getSymbols(c("SPY", "MSFT", "SBUX", "^NSEI"))
+getSymbols(c("SPY", "MSFT", "SBUX"))
 
 
 strat_macd <- function(x){
