@@ -13,12 +13,14 @@ chartSeries(MSFT[backtest_period], TA='addMACD();addRSI();addCCI();addDEMA();add
 # trading strategies
 # return buy and sell signal 1, -1
 #
+# MACD trading strategy
 strat_macd <- function(x){
   macd   <- MACD(Cl(x), 12, 26, 9, SMA, F)
   signal <- lag(ifelse(macd$macd < macd$signal, -1, 1))
   signal
 }
 
+# RSI, CCI trading strategy
 strat_rsi_cci <- function(prices){
   RSI30  <- RSI(prices, 30)
   RSI50  <- RSI(prices, 50)
@@ -29,6 +31,7 @@ strat_rsi_cci <- function(prices){
   signal
 }
 
+# DEMA trading strategy
 strat_dema <- function(prices) {
   dema12 <- DEMA(prices, 12)
   dema14 <- DEMA(prices, 14)
@@ -37,10 +40,16 @@ strat_dema <- function(prices) {
   signal
 }
 
+# DVI trading strategy, surprisingly well
 strat_dvi <- function(x) {
   dvi <- DVI(x)
   sig <- Lag(ifelse(dvi$dvi < .5, 1, -1))
   sig
+}
+
+# neural net trading strategy
+strat_nnet <- function(prices) {
+  # nothing here yet
 }
 
 # backtest with MSFT 2018 stock, closing price
