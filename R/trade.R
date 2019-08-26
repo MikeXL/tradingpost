@@ -14,10 +14,9 @@ chartSeries(MSFT[backtest_period], TA='addMACD();addRSI();addCCI();addDEMA();add
 # return buy and sell signal 1, -1
 #
 # SMA trading strategy
-strat_sma <- function(x){
-  sma12 <- SMA(x, 12)
-  sma26 <- SMA(x, 26)
-  signal <- lag(ifelse(sma12 < sma26, -1, 1))
+strat_sma <- function(price){
+  sma5 <- SMA(price, 5)
+  signal <- lag(ifelse(price > sma5, 1, -1))
   signal
 }
 
@@ -83,7 +82,7 @@ names(rets_rsi_cci)  <- "RSI CCI"
 names(rets_dvi)      <- "DVI"
 names(rets_sma)      <- "SMA"
 names(rets_dema)     <- "DEMA"
-names(rets_base)     <- "daily return"
+names(rets_base)     <- "Buy and Hold"
 
 charts.PerformanceSummary(
     cbind( rets_macd, rets_base, rets_dvi, rets_sma, rets_rsi_cci, rets_dema), 
