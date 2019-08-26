@@ -5,19 +5,24 @@ getSymbols(c("SPY", "MSFT", "SBUX"))
 
 backtest_period  <- '2018-01-01/2018-12-31'
 
+# chart MSFT stock in full 
+#  and back test period
 chartSeries(MSFT, TA='addMACD();addRSI();addCCI();addDEMA();addROC()')
 chartSeries(MSFT[backtest_period], TA='addMACD();addRSI();addCCI();addDEMA();addROC()')
 
+# trading strategies
+# return buy and sell signal 1, -1
+#
 strat_macd <- function(x){
-  macd <- MACD(Cl(x), 12, 26, 9, SMA, F)
+  macd   <- MACD(Cl(x), 12, 26, 9, SMA, F)
   signal <- lag(ifelse(macd$macd < macd$signal, -1, 1))
   signal
 }
 
 strat_rsi_cci <- function(prices){
-  RSI30 <- RSI(prices, 30)
-  RSI50 <- RSI(prices, 50)
-  CCI6 <- CCI(prices, 6)
+  RSI30  <- RSI(prices, 30)
+  RSI50  <- RSI(prices, 50)
+  CCI6   <- CCI(prices, 6)
   CCI100 <- CCI(prices, 100)
   
   signal <- lag(ifelse(RSI30 > RSI50 & CCI6 > CCI100, 1, -1))
@@ -38,7 +43,7 @@ strat_dvi <- function(x) {
   sig
 }
 
-# backtest with MSFT 2018 stock
+# backtest with MSFT 2018 stock, closing price
 
 data = Cl(MSFT)
 returns_macd     <- ROC(data) * strat_macd(data)
