@@ -44,11 +44,11 @@ returns_dema     <- ROC(data) * strat_dema(data)
 returns_base     <- dailyReturn(data)
 
 backtest_period  <- '2018-01-01/2018-12-31'
-rets_macd        <- returns_macd[backtest_period]
+rets_macd        <- returns_macd    [backtest_period]
 rets_rsi_cci     <- returns_rsi_cci [backtest_period]
-rets_dvi         <- returns_dvi [backtest_period]
-rets_dema        <- returns_dema[backtest_period]
-rets_base        <- returns_base[backtest_period]
+rets_dvi         <- returns_dvi     [backtest_period]
+rets_dema        <- returns_dema    [backtest_period]
+rets_base        <- returns_base    [backtest_period]
 
 
 names(rets_macd)     <- "MACD"
@@ -56,5 +56,9 @@ names(rets_rsi_cci)  <- "RSI CCI"
 names(rets_dvi)      <- "DVI"
 names(rets_dema)     <- "DEMA"
 names(rets_base)     <- "daily return"
-charts.PerformanceSummary(cbind( rets_macd, rets_base, rets_dvi, rets_rsi_cci, rets_dema), main="Performance of Strategies")
+
+charts.PerformanceSummary(
+    cbind( rets_macd, rets_base, rets_dvi, rets_rsi_cci, rets_dema), 
+    main="Performance of Strategies"
+)
 
