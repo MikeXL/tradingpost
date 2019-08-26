@@ -3,6 +3,10 @@ library(PerformanceAnalytics)
 
 getSymbols(c("SPY", "MSFT", "SBUX"))
 
+backtest_period  <- '2018-01-01/2018-12-31'
+
+chartSeries(MSFT, TA='addMACD();addRSI();addCCI();addDEMA();addROC()')
+chartSeries(MSFT[backtest_period], TA='addMACD();addRSI();addCCI();addDEMA();addROC()')
 
 strat_macd <- function(x){
   macd <- MACD(Cl(x), 12, 26, 9, SMA, F)
@@ -43,7 +47,6 @@ returns_dvi      <- ROC(data) * strat_dvi(data)
 returns_dema     <- ROC(data) * strat_dema(data)
 returns_base     <- dailyReturn(data)
 
-backtest_period  <- '2018-01-01/2018-12-31'
 rets_macd        <- returns_macd    [backtest_period]
 rets_rsi_cci     <- returns_rsi_cci [backtest_period]
 rets_dvi         <- returns_dvi     [backtest_period]
