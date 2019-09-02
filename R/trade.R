@@ -1,10 +1,11 @@
 library(quantmod)
 library(PerformanceAnalytics)
 
-getSymbols(c("SPY", "MSFT", "SBUX"))
+getSymbols(c("SPY", "MSFT", "SBUX", "WMT", "COKE"))
 
-backtest_period  <- '2018-01-01/2018-12-31'
-
+# backtest_period  <- '2018-01-01/2018-12-31'
+backtest_period = '2015-01-01/2016-12-31'
+  
 # chart MSFT stock in full 
 #  and back test period
 chartSeries(MSFT, TA='addMACD();addRSI();addCCI();addDEMA();addROC()')
@@ -15,15 +16,16 @@ chartSeries(MSFT[backtest_period], TA='addMACD();addRSI();addCCI();addDEMA();add
 #
 # SMA trading strategy
 strat_sma <- function(price){
-  sma5 <- SMA(price, 5)
-  signal <- lag(ifelse(price > sma5, 1, -1))
+  sma5 <- SMA(price, 10)
+  sma20 <- SMA(price, 30)
+  signal <- lag(ifelse(sma5 > sma20, 1, 0))
   signal
 }
 
 # MACD trading strategy
 strat_macd <- function(x){
   macd   <- MACD(Cl(x), 12, 26, 9, SMA, F)
-  signal <- lag(ifelse(macd$macd < macd$signal, -1, 1))
+  signal <- lag(ifelse(macd$macd > macd$signal, 1, 0))
   signal
 }
 
@@ -34,7 +36,7 @@ strat_rsi_cci <- function(prices){
   CCI6   <- CCI(prices, 6)
   CCI100 <- CCI(prices, 100)
   
-  signal <- lag(ifelse(RSI30 > RSI50 & CCI6 > CCI100, 1, -1))
+  signal <- lag(ifelse(RSI30 > RSI50 & CCI6 > CCI100, 1, 0))
   signal
 }
 
@@ -43,14 +45,14 @@ strat_dema <- function(prices) {
   dema12 <- DEMA(prices, 12)
   dema14 <- DEMA(prices, 14)
   
-  signal <- lag(ifelse(dema12 > dema14, 1, -1))
+  signal <- lag(ifelse(dema12 > dema14, 1, 0))
   signal
 }
 
 # DVI trading strategy, surprisingly well
 strat_dvi <- function(x) {
   dvi <- DVI(x)
-  sig <- Lag(ifelse(dvi$dvi < .5, 1, -1))
+  sig <- Lag(ifelse(dvi$dvi < .5, 1, 0))
   sig
 }
 
@@ -63,8 +65,8 @@ strat_nnet <- function(prices) {
 # data = Cl(SPY)
 
 # simple portfolio = 50% MSFT + 40% Starbucks + 10% S&P index
-data = Cl(MSFT)*.5 + Cl(SBUX)*.4 + Cl(SPY)*.1
-chartSeries(data['2018-01-01/'], TA="addMACD();addRSI()", title="portfolio = 50% MSFT + 40% Starbucks + 10% S&P index")
+# data = Cl(MSFT)*.5 + Cl(SBUX)*.4 + Cl(SPY)*.1
+data = Cl(SPY)
 
 returns_macd     <- ROC(data) * strat_macd(data)
 returns_rsi_cci  <- ROC(data) * strat_rsi_cci(data)
@@ -87,6 +89,9 @@ names(rets_dvi)      <- "DVI"
 names(rets_sma)      <- "SMA"
 names(rets_dema)     <- "DEMA"
 names(rets_base)     <- "Buy and Hold"
+
+par(mfrow=c(2,1))
+chartSeries(data[backtest_period], TA="addMACD();addRSI()", title="portfolio = 50% MSFT + 40% Starbucks + 10% S&P index")
 
 charts.PerformanceSummary(
     cbind( rets_macd, rets_base, rets_dvi, rets_sma, rets_rsi_cci, rets_dema), 
